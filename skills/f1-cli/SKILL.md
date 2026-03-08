@@ -126,10 +126,10 @@ f1 laps --session latest --driver HAM --csv > hamilton_laps.csv
 
 ### "Who won the last race?"
 ```bash
+# Always use standings for final race results
 f1 standings drivers --session latest
-# Or check final positions:
-f1 positions --session latest --limit 20
 ```
+**Do NOT use `f1 positions` for race results.** Positions is a time series — it records every position change throughout the session. Using `--limit` on positions gives you the *start* of the race, not the finish. Use `f1 standings drivers` for the final classification.
 
 ### "Compare two drivers' lap times"
 ```bash
@@ -162,6 +162,7 @@ f1 pit --session latest --filter "stop_duration<3" --json | jq 'sort_by(.stop_du
 
 - **`--limit` is client-side only.** The OpenF1 API does not support a `limit` query parameter. The CLI fetches all results then truncates locally. This means large telemetry/location queries still hit the API fully — use `--filter` to narrow server-side when possible.
 - **`--filter` is server-side.** Filters like `speed>=300` are sent to the API and reduce the response. Always prefer `--filter` over `--limit` for performance.
+- **`positions` is a time series, not a result.** It records every position change during a session. To get final race results, use `f1 standings drivers --session <key>`, not `f1 positions`. Using `positions --limit N` gives you lap 1 grid order, not the finish.
 - **Driver numbers change between seasons.** Don't hardcode driver numbers — use acronyms (VER, HAM, NOR) which the CLI resolves automatically per session.
 - **Norris is now #1.** For the 2026 season, Lando Norris drives car #1 (as reigning champion). Verstappen is #3.
 
