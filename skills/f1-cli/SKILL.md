@@ -150,11 +150,19 @@ f1 weather --session latest --limit 10
 f1 pit --session latest --filter "stop_duration<3" --json | jq 'sort_by(.stop_duration)'
 ```
 
+## Important Gotchas
+
+- **`--limit` is client-side only.** The OpenF1 API does not support a `limit` query parameter. The CLI fetches all results then truncates locally. This means large telemetry/location queries still hit the API fully — use `--filter` to narrow server-side when possible.
+- **`--filter` is server-side.** Filters like `speed>=300` are sent to the API and reduce the response. Always prefer `--filter` over `--limit` for performance.
+- **Driver numbers change between seasons.** Don't hardcode driver numbers — use acronyms (VER, HAM, NOR) which the CLI resolves automatically per session.
+- **Norris is now #1.** For the 2026 season, Lando Norris drives car #1 (as reigning champion). Verstappen is #3.
+
 ## API Notes
 
 - **Data availability:** Historical data from 2023 season onwards. No auth needed.
-- **Rate limits:** 3 requests/second, 30 requests/minute (free tier). The CLI handles rate limiting internally.
+- **Rate limits:** 3 requests/second, 30 requests/minute (free tier). The CLI handles rate limiting internally with retry on 429.
 - **`latest` keyword:** Works for both `--session` and `--meeting` to get the most recent.
 - **Intervals and overtakes:** Only available during race sessions, not practice or qualifying.
 - **Championship standings:** Only available for race sessions.
-- **Telemetry and location:** High-frequency data (~3.7 Hz) — use `--limit` to avoid huge outputs.
+- **Telemetry and location:** High-frequency data (~3.7 Hz) — use `--filter` to narrow results server-side, then `--limit` to cap output.
+- **Off-season:** `--session latest` returns 404 when no sessions exist. Use a known session_key from a past season instead.
