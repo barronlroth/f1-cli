@@ -1,6 +1,14 @@
 ---
 name: f1-cli
 description: Query Formula 1 data using the f1-cli command-line tool (wraps OpenF1 API). Use when the user asks about F1 race results, lap times, driver standings, pit stops, telemetry, weather, team radio, overtakes, tire strategy, or any Formula 1 statistics. Also use when asked to compare drivers, analyze race performance, look up session data, or retrieve real-time F1 information. Triggers on mentions of F1, Formula 1, Grand Prix, specific driver names (Verstappen, Hamilton, Norris), or racing data queries. Even casual questions like "who won the last race" or "how fast was Max's fastest lap" should use this skill.
+metadata:
+  {
+    "openclaw":
+      {
+        "emoji": "🏎️",
+        "requires": { "bins": ["f1"] },
+      },
+  }
 ---
 
 # f1-cli — Formula 1 Data CLI
