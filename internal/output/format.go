@@ -22,6 +22,16 @@ func WriteJSON(w io.Writer, body []byte) error {
 	return err
 }
 
+func WriteJSONRecords(w io.Writer, records []map[string]any) error {
+	raw, err := json.MarshalIndent(records, "", "  ")
+	if err != nil {
+		return fmt.Errorf("format JSON output: %w", err)
+	}
+	raw = append(raw, '\n')
+	_, wErr := w.Write(raw)
+	return wErr
+}
+
 func WriteCSV(w io.Writer, body []byte) error {
 	if len(body) == 0 {
 		return nil

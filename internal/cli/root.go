@@ -311,9 +311,8 @@ func (a *app) commonParams(ctx context.Context) (map[string]string, error) {
 	if meeting := strings.TrimSpace(a.opts.meeting); meeting != "" {
 		params["meeting_key"] = meeting
 	}
-	if a.opts.limit > 0 {
-		params["limit"] = strconv.Itoa(a.opts.limit)
-	}
+	// Note: limit is applied client-side, not sent to the API.
+	// OpenF1 does not support a "limit" query parameter.
 
 	if driverInput := strings.TrimSpace(a.opts.driver); driverInput != "" {
 		resolutionSession := strings.TrimSpace(a.opts.session)
@@ -348,15 +347,21 @@ func (a *app) executeEndpoint(ctx context.Context, endpoint string, params map[s
 		}
 		return output.WriteCSV(a.out, resp.Body)
 	case formatJSON:
-		resp, err := a.client.GetRaw(ctx, endpoint, params, a.opts.filters)
+		records, err := a.client.Query(ctx, endpoint, params, a.opts.filters)
 		if err != nil {
 			return err
 		}
-		return output.WriteJSON(a.out, resp.Body)
+		if a.opts.limit > 0 && len(records) > a.opts.limit {
+			records = records[:a.opts.limit]
+		}
+		return output.WriteJSONRecords(a.out, records)
 	default:
 		records, err := a.client.Query(ctx, endpoint, params, a.opts.filters)
 		if err != nil {
 			return err
+		}
+		if a.opts.limit > 0 && len(records) > a.opts.limit {
+			records = records[:a.opts.limit]
 		}
 		return output.WriteTable(a.out, records)
 	}
