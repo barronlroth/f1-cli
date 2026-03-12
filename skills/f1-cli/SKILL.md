@@ -1,5 +1,6 @@
 ---
 name: f1-cli
+license: MIT
 description: Query Formula 1 data using the f1-cli command-line tool (wraps OpenF1 API). Use when the user asks about F1 race results, lap times, driver standings, pit stops, telemetry, weather, team radio, overtakes, tire strategy, or any Formula 1 statistics. Also use when asked to compare drivers, analyze race performance, look up session data, or retrieve real-time F1 information. Triggers on mentions of F1, Formula 1, Grand Prix, specific driver names (Verstappen, Hamilton, Norris), or racing data queries. Even casual questions like "who won the last race" or "how fast was Max's fastest lap" should use this skill.
 metadata:
   {
@@ -15,16 +16,19 @@ metadata:
 
 A Go CLI wrapping the [OpenF1 API](https://openf1.org) for querying F1 telemetry, timing, and session data.
 
-## Binary Location
+## Installation
 
-The binary should be at one of:
-- `f1` (if installed to PATH)
-- `/Users/barron/Developer/f1-cli/f1` (built from source)
-
-If not found, build it:
 ```bash
-cd /Users/barron/Developer/f1-cli && go build -o f1 ./cmd/f1
+brew tap barronlroth/tap
+brew install f1-cli
 ```
+
+Or from source:
+```bash
+go install github.com/barronlroth/f1-cli/cmd/f1@latest
+```
+
+The binary name is `f1`.
 
 ## Quick Reference
 
